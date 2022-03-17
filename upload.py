@@ -77,7 +77,7 @@ is_listing = BooleanVar()
 is_listing.set(True) 
 
 is_numformat = BooleanVar()
-is_numformat.set(False) 
+is_numformat.set(False)
 
 
 def save_duration():
@@ -199,8 +199,6 @@ def save():
     external_link.save_inputs(8)
     
 
-    
-
 def main_program_loop():
 
     if len(end_num_input.input_field.get()) > 5 :
@@ -245,10 +243,20 @@ def main_program_loop():
 
 
     while end_num >= start_num:
+
+        
+        print("start_numformat")
+
         if is_numformat.get():
             start_numformat = f"{ start_num:04}"
         else:
              start_numformat = f"{ start_num:01}"
+
+        start_numformat = start_numformat.zfill(4)  # 1000개 기준
+
+
+        print("start_numformat")
+        print(start_numformat)
 
         print("Start creating NFT " +  loop_title + str(start_numformat))
         print('number ',  start_numformat)
@@ -283,7 +291,7 @@ def main_program_loop():
             time.sleep(0.8)
 
             # checks if file exists
-            jsonData = json.loads(open(file_path + "\\json\\"+ str(start_numformat) + ".json").read())
+            jsonData = json.loads(open(file_path + "\\json\\"+ str(start_numformat) + ".json", encoding="UTF-8").read())
             
             if "attributes" in jsonData:
                 jsonMetaData = jsonData['attributes']
@@ -409,6 +417,12 @@ def main_program_loop():
                 endmonth = (date.today() + relativedelta(months=+6)).month   
                 #print(endday, endmonth)
 
+
+            print("endday, endmonth")
+            print(endday, endmonth)
+
+
+
             #if duration_date != 30:
             amount.send_keys(Keys.TAB)
             time.sleep(0.8)
@@ -420,6 +434,10 @@ def main_program_loop():
             driver.execute_script("arguments[0].click();", select_durationday)
             time.sleep(0.8)
             
+            print("lastdate.strftime(%x)[:2]")
+            print(lastdate)
+            print(lastdate.strftime('%x')[:2])
+
             if lastdate.strftime('%x')[:2] == "12":
                 #print("is month first")
                 select_durationday.send_keys(str(endmonth))
@@ -432,6 +450,12 @@ def main_program_loop():
                 select_durationday.send_keys(str(endmonth))
                 select_durationday.send_keys(Keys.ENTER)
                 time.sleep(1)
+            elif lastdate.strftime('%x')[:2] == "20":
+                #print("is year first")
+                select_durationday.send_keys(str(endmonth))
+                select_durationday.send_keys(str(endday))
+                select_durationday.send_keys(Keys.ENTER)
+                time.sleep(1)                
             else:
                 print("invalid date format: change date format to MM/DD/YYYY or DD/MM/YYYY")
 
@@ -440,15 +464,25 @@ def main_program_loop():
             driver.execute_script("arguments[0].click();", listing)
             time.sleep(10)
             
+            print("wait_css_selector done")
+            print(is_polygon.get())
+
             if is_polygon.get():
+                print("Sign click start")
                 driver.find_element(By.XPATH, '//button[text()="Sign"]').click()
+                print("Sign click done")
                 time.sleep(1)
+
+            print("is_polygon.get() done")
 
             for handle in driver.window_handles:
                 if handle != main_page:
                     login_page = handle
                     #break
-            
+
+            print("handle done")
+
+
             driver.switch_to.window(login_page) 
                
             if is_polygon.get():

@@ -53,6 +53,9 @@ build/
 dist/
 node_modules/
 jspm_packages/
+chrome_profile/
+src/
+
 
 # TypeScript v1 declaration files
 
@@ -141,4 +144,3 @@ dist
 
 .DS_Store
 
-.chrome_profile/
